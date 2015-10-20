@@ -8,6 +8,6 @@ router.get('/', function (req, res) {
     .then(function (roomies) {
       res.status(200).send(roomies)
     })
-});
+})
 
 module.exports = router
