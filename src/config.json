@@ -1,0 +1,16 @@
+{
+  "development": {
+    "db": {
+      "host": "roomies-api.cni8lechdtt5.eu-west-1.rds.amazonaws.com",
+      "port": 3306,
+      "username": "roomies_api_root",
+      "password": "foobar1234",
+      "database": "roomies-api",
+      "dialect": "sqlite",
+      "storage": "../db.sqlite"
+    },
+    "app": {
+      "port": 1337
+    }
+  }
+}
