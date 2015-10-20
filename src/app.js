@@ -5,7 +5,6 @@
 var express = require('express')
 var logger = require('morgan')
 var bodyParser = require('body-parser')
-var sequelize = require('sequelize')
 
 var handleMissingResource = require('./utils/utils.js').handleMissingResource
 var handleServerError = require('./utils/utils.js').handleServerError
@@ -32,6 +31,6 @@ app.use(handleMissingResource)
  */
 
 // no stacktraces leaked to user unless in development environment
-app.use(handleServerError);
+app.use(handleServerError)
 
 module.exports = app
