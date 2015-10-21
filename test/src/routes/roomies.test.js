@@ -197,4 +197,117 @@ describe('Roomies', function () {
       })
     })
   })
+
+  describe('create a new roomie', function () {
+    describe('when the request body is correct', function () {
+      before(function () {
+        sinon.stub(models.Roomies, 'create').resolves(mockedRoomie)
+      })
+
+      after(function () {
+        models.Roomies.create.restore()
+      })
+
+      it('should return 201', function (done) {
+        request(app)
+          .post('/roomies')
+          .send(mockedRoomie)
+          .expect(201, done)
+      })
+
+      it('should return the create roomies', function (done) {
+        request(app)
+          .post('/roomies')
+          .send(mockedRoomie)
+          .expect({
+            error: false,
+            content: {
+              message: mockedRoomie
+            }
+          }, done)
+      })
+    })
+
+    describe('when the request body is empty', function () {
+      it('should return 400', function (done) {
+        request(app)
+          .post('/roomies')
+          .expect(400, done)
+      })
+
+      it('should return an error message', function (done) {
+        request(app)
+          .post('/roomies')
+          .expect({
+            error: true,
+            content: {
+              message: '`request.body` cannot be empty'
+            }
+          }, done)
+      })
+    })
+
+    describe('when email is missing', function () {
+      it('should return 400', function (done) {
+        request(app)
+          .post('/roomies')
+          .send({firstName: 'foo', lastName: 'bar'})
+          .expect(400, done)
+      })
+
+      it('should return an error message', function (done) {
+        request(app)
+          .post('/roomies')
+          .send({firstName: 'foo', lastName: 'bar'})
+          .expect({
+            error: true,
+            content: {
+              message: '`request.body.email` is missing'
+            }
+          }, done)
+      })
+    })
+
+    describe('when firstName is missing', function () {
+      it('should return 400', function (done) {
+        request(app)
+          .post('/roomies')
+          .send({email: 'foobar@baz.com', lastName: 'bar'})
+          .expect(400, done)
+      })
+
+      it('should return an error message', function (done) {
+        request(app)
+          .post('/roomies')
+          .send({email: 'foobar@baz.com', lastName: 'bar'})
+          .expect({
+            error: true,
+            content: {
+              message: '`request.body.firstName` is missing'
+            }
+          }, done)
+      })
+
+      describe('when lastName is missing', function () {
+        it('should return 400', function (done) {
+          request(app)
+            .post('/roomies')
+            .send({email: 'foobar@baz.com', firstName: 'foo'})
+            .expect(400, done)
+        })
+
+        it('should return an error message', function (done) {
+          request(app)
+            .post('/roomies')
+            .send({email: 'foobar@baz.com', firstName: 'foo'})
+            .expect({
+              error: true,
+              content: {
+                message: '`request.body.lastName` is missing'
+              }
+            }, done)
+        })
+      })
+    })
+  })
 })
