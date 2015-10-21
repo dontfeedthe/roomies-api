@@ -16,7 +16,43 @@ exports.getAll = function getAll (req, res, next) {
 }
 
 exports.createOne = function createOne (req, res, next) {
-  models.Roomies
+  if (!Object.getOwnPropertyNames(req.body).length) {
+    return res.status(400).send({
+      error: true,
+      content: {
+        message: '`request.body` cannot be empty'
+      }
+    })
+  }
+
+  if (!req.body.email) {
+    return res.status(400).send({
+      error: true,
+      content: {
+        message: '`request.body.email` is missing'
+      }
+    })
+  }
+
+  if (!req.body.firstName) {
+    return res.status(400).send({
+      error: true,
+      content: {
+        message: '`request.body.firstName` is missing'
+      }
+    })
+  }
+
+  if (!req.body.lastName) {
+    return res.status(400).send({
+      error: true,
+      content: {
+        message: '`request.body.lastName` is missing'
+      }
+    })
+  }
+
+  return models.Roomies
     .create(req.body)
     .then(function (roomie) {
       res.status(201).send({
@@ -34,7 +70,7 @@ exports.destroyAll = function destroyAll (req, res, next) {
     .then(function (roomies) {
       Promise
         .all(roomies.map((roomie) => roomie.destroy()))
-        .then(function(values) {
+        .then(function (values) {
           res.status(200).send({
             error: false,
             content: {
