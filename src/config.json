@@ -1,16 +1,27 @@
 {
   "development": {
     "db": {
-      "host": "roomies-api.cni8lechdtt5.eu-west-1.rds.amazonaws.com",
-      "port": 3306,
-      "username": "roomies_api_root",
-      "password": "foobar1234",
+      "username": "foobar",
+      "password": "foobar",
       "database": "roomies-api",
       "dialect": "sqlite",
       "storage": "../db.sqlite"
     },
     "app": {
       "port": 1337
+    }
+  },
+  "test": {
+    "db": {
+      "username": "foobar",
+      "password": "foobar",
+      "database": "roomies-api-test",
+      "dialect": "sqlite",
+      "storage": "../db.sqlite",
+      "logging": false
+    },
+    "app": {
+      "port": 1338
     }
   }
 }
