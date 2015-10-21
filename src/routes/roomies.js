@@ -1,13 +1,24 @@
-var express = require('express')
-var router = express.Router()
-var models = require('../models')
+'use strict'
 
-/* GET users listing. */
-router.get('/', function (req, res) {
-  models.Roomies.findAll()
-    .then(function (roomies) {
-      res.status(200).send(roomies)
-    })
-})
+/**
+ * Module dependencies
+ */
+
+var express = require('express')
+
+/**
+ * Module configuration
+ */
+
+var router = express.Router()
+var RoomiesService = require('../services/roomies')
+
+/**
+ * Routes
+ */
+
+router.get('/', RoomiesService.getAll)
+// router.post('/', RoomiesService.createOne)
+router.delete('/', RoomiesService.destroyAll)
 
 module.exports = router

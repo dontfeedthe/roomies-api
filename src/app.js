@@ -8,6 +8,7 @@ var bodyParser = require('body-parser')
 
 var handleMissingResource = require('./utils/utils.js').handleMissingResource
 var handleServerError = require('./utils/utils.js').handleServerError
+var env = process.env.NODE_ENV || 'development'
 
 /**
  * Application configuration
@@ -16,7 +17,11 @@ var handleServerError = require('./utils/utils.js').handleServerError
 var roomies = require('./routes/roomies')
 var app = express()
 
-app.use(logger('dev'))
+app.use(logger('dev', {
+  skip: function (req, res) {
+    return env === 'test'
+  }
+}))
 app.use(bodyParser.json())
 
 /**
@@ -30,7 +35,7 @@ app.use(handleMissingResource)
  * Errors handler
  */
 
-// no stacktraces leaked to user unless in development environment
+// no stacktraces leaked to user unless the environment is development
 app.use(handleServerError)
 
 module.exports = app

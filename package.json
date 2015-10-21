@@ -34,8 +34,8 @@
   "scripts": {
     "start": "node ./src/bin/www",
     "start:dev": "nodemon ./src/bin/www",
-    "test": "standard && mocha",
-    "test:watch": "mocha --watch"
+    "test": "export NODE_ENV=test standard && mocha --recursive",
+    "test:watch": "export NODE_ENV=test standard && mocha --recursive --watch"
   },
   "dependencies": {
     "bcrypt": "^0.8.5",
@@ -49,7 +49,10 @@
   },
   "devDependencies": {
     "chai": "^3.3.0",
+    "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.3",
+    "sinon": "^1.17.2",
+    "sinon-as-promised": "^4.0.0",
     "supertest": "^1.1.0"
   }
 }

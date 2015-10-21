@@ -5,9 +5,12 @@ var env = process.env.NODE_ENV || 'development'
  */
 
 exports.handleMissingResource = function (req, res, next) {
-  var err = new Error('Not Found')
-  err.status = 404
-  next(err)
+  res.status(404).send({
+    error: true,
+    content: {
+      message: 'Not found'
+    }
+  })
 }
 
 /**
@@ -16,8 +19,10 @@ exports.handleMissingResource = function (req, res, next) {
 
 exports.handleServerError = function (err, req, res, next) {
   res.status(err.status || 500).send({
-    message: err.message,
-    error: (env === 'development') ? err : {}
+    error: true,
+    content: {
+      message: err
+    }
   })
 }
 
