@@ -1,5 +1,28 @@
 var env = process.env.NODE_ENV || 'development'
 
+/**
+ *
+ */
+exports.testContentType = function (req, res, next) {
+  // We don't test GET and HEAD content type since... there's none.
+  var httpMethodsWithoutContentType = ['GET', 'HEAD']
+  if (httpMethodsWithoutContentType.indexOf(req.method) !== -1) {
+    return next()
+  }
+
+  var supportedContentTypes = ['application/json']
+  if (supportedContentTypes.indexOf(req.headers['content-type']) !== -1) {
+    return next()
+  }
+
+  return res.status(415).send({
+    error: true,
+    content: {
+      message: `The content type "${req.headers['content-type']}" is not supported. Are supported: "${supportedContentTypes}"`
+    }
+  })
+}
+
 /*
  * Create a new error to manage 404 error
  */
