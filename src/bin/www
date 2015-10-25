@@ -33,6 +33,7 @@ models.sequelize.sync().then(function () {
   var server = http.createServer(app)
 
   var onListening = require('../utils/utils').onListening(debug, server)
+  console.log('Server listening on port %s', port)
 
   /**
    * Listen on provided port, on all network interfaces.
