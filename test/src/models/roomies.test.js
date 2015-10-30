@@ -1,10 +1,13 @@
-var expect = require('chai').expect
+/* globals describe it */
+var chai = require('chai')
 var Roomies = require('../../../src/models/roomies')
 
-describe('Models', function () {
-  describe('Roomies', function () {
-    it('should exist', function () {
-      expect(Roomies).to.not.be.undefined
+chai.should()
+
+describe('Models', () => {
+  describe('Roomies', () => {
+    it('should exist', () => {
+      Roomies.should.exist
     })
   })
 })
