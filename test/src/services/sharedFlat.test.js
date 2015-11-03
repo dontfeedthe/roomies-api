@@ -10,7 +10,7 @@ let sharedFlatService = require('../../../src/services/sharedFlat')
 
 require('chai').should()
 
-describe.only('SharedFlatService', () => {
+describe('SharedFlatService', () => {
   it('should exist a service for that', () => {
     sharedFlatService.should.exist
   })
