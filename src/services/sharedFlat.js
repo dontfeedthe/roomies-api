@@ -3,12 +3,12 @@
 var models = require('../models')
 
 exports.createOne = (req, res) => {
-  let address = req.params.address
+  let address = req.body.address
   if (!address) {
     throw new Error('`address` is missing')
   }
 
-  let name = req.params.name
+  let name = req.body.name
   if (!name) {
     throw new Error('`name` is missing')
   }

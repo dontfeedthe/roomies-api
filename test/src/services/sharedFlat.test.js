@@ -39,7 +39,7 @@ describe.only('SharedFlatService', () => {
       let req = httpMocks.createRequest({
         url: '/roomies',
         method: 'POST',
-        params: {
+        body: {
           address: 'foobar'
         }
       })
@@ -68,7 +68,7 @@ describe.only('SharedFlatService', () => {
         let req = httpMocks.createRequest({
           url: '/roomies',
           method: 'POST',
-          params: data
+          body: data
         })
         let res = httpMocks.createResponse()
 
