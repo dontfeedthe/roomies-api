@@ -12,14 +12,6 @@
     }
   },
   "test": {
-    "db": {
-      "username": "foobar",
-      "password": "foobar",
-      "database": "roomies-api-test",
-      "dialect": "sqlite",
-      "storage": "../db.sqlite",
-      "logging": false
-    },
     "app": {
       "port": 1338
     }
