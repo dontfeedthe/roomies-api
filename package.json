@@ -38,7 +38,6 @@
     "test:watch": "export NODE_ENV=test standard && mocha --recursive --watch"
   },
   "dependencies": {
-    "bcrypt": "^0.8.5",
     "body-parser": "~1.13.2",
     "debug": "~2.2.0",
     "express": "~4.13.1",
