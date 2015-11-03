@@ -15,6 +15,7 @@ var env = process.env.NODE_ENV || 'development'
  */
 
 var roomies = require('./routes/roomies')
+var sharedFlat = require('./routes/sharedFlat')
 var app = express()
 
 app.use(logger('dev', {
@@ -29,6 +30,7 @@ app.use(bodyParser.json())
  */
 
 app.use('/roomies', roomies)
+app.use('/sharedFlat', sharedFlat)
 app.use(handleMissingResource)
 
 /**
