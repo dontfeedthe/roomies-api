@@ -4,8 +4,8 @@ var request = require('supertest')
 var sinon = require('sinon')
 require('sinon-as-promised')
 
-var app = require('../../../src/app')
-var models = require('../../../src/models')
+var app = require('../../src/app')
+var models = require('../../src/models')
 
 describe('Roomies', function () {
   var mockedRoomie = {
