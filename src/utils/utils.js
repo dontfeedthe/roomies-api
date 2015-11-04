@@ -1,3 +1,23 @@
+'use strict'
+
+exports.reply = (content) => {
+  if (!content) {
+    throw new ReferenceError('`content` is missing')
+  }
+
+  let errorHappened = content.errors && content.errors.length > 0
+  return {
+    errors: !errorHappened ? null : content.errors.map((error) => {
+      return {
+        status: error.code,
+        title: require('http').STATUS_CODES[error.code],
+        detail: error.message
+      }
+    }),
+    data: errorHappened ? null : content.data
+  }
+}
+
 /**
  *
  */

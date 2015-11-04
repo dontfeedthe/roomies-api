@@ -1,9 +1,14 @@
 /* global before */
 
+'use strict'
+
 var utils = require('../../../src/utils/utils')
-var expect = require('chai').expect
+var chai = require('chai');
+var expect = chai.expect
 var httpMocks = require('node-mocks-http')
 var sinon = require('sinon')
+
+chai.should()
 
 describe('utils', function () {
   before(function () {
@@ -98,6 +103,80 @@ describe('utils', function () {
           var callback = sinon.spy()
           utils.testContentType(req, this.mockedRes, callback)
           expect(callback.called).to.be.false
+        })
+      })
+    })
+  })
+
+  describe('reply', () => {
+    const reply = utils.reply
+    it('should be available in utils', function () {
+      expect(utils).to.have.property('testContentType')
+    })
+
+    it('should be a function', function () {
+      expect(utils.testContentType).to.be.a('function')
+    })
+
+    describe('when content is missing', () => {
+      it('should throw ReferenceError', () => {
+        reply.bind().should.throw(Error)
+      })
+      it('should say that the content is missing', () => {
+        reply.bind().should.throw(/`content` is missing/)
+      })
+    })
+
+    describe('when errors are provided', () => {
+      let content = {
+        errors: [{
+          code: 400,
+          message: 'foobar foo baz'
+        }]
+      }
+
+      it('should return the appropriate format', () => {
+        reply(content).should.deep.equals({
+          errors: [{
+            status: 400,
+            title: 'Bad Request',
+            detail: 'foobar foo baz'
+          }],
+          data: null
+        })
+      })
+    })
+
+    describe('when data are provided', () => {
+      let content = {
+        data: 'foobar'
+      }
+
+      it('should return the appropriate format', () => {
+        reply(content).should.deep.equals({
+          errors: null,
+          data: 'foobar'
+        })
+      })
+    })
+
+    describe('when both are provided', () => {
+      it('should return the error only', () => {
+        let content = {
+          data: 'foobar',
+          errors: [{
+            code: 400,
+            message: 'foobar foo baz'
+          }]
+        }
+
+        reply(content).should.deep.equals({
+          errors: [{
+            status: 400,
+            title: 'Bad Request',
+            detail: 'foobar foo baz'
+          }],
+          data: null
         })
       })
     })
