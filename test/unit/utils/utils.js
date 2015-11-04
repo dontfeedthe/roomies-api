@@ -3,7 +3,7 @@
 'use strict'
 
 var utils = require('../../../src/utils/utils')
-var chai = require('chai');
+var chai = require('chai')
 var expect = chai.expect
 var httpMocks = require('node-mocks-http')
 var sinon = require('sinon')
