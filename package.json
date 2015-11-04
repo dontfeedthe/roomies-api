@@ -24,7 +24,11 @@
   "standard": {
     "globals": [
       "describe",
-      "it"
+      "it",
+      "before",
+      "after",
+      "beforeEach",
+      "afterEach"
     ]
   },
   "private": true,
@@ -34,8 +38,12 @@
   "scripts": {
     "start": "node ./src/bin/www",
     "start:dev": "nodemon ./src/bin/www",
-    "test": "export NODE_ENV=test standard && mocha --recursive",
-    "test:watch": "export NODE_ENV=test standard && mocha --recursive --watch"
+    "lint": "standard && echo Code looks good!",
+    "test": "npm run lint && npm run test:all",
+    "test:unit": "export NODE_ENV=test && mocha --recursive test/unit",
+    "test:integration": "export NODE_ENV=test && mocha --recursive test/integration",
+    "test:all": "export NODE_ENV=test && mocha --recursive",
+    "test:watch": "export NODE_ENV=test && standard && mocha --recursive --watch"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
