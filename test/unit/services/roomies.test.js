@@ -72,7 +72,7 @@ describe('Services', function () {
 
         describe('when there are no roomies', () => {
           before(() => {
-            sinon.stub(models.Roomies, 'find').resolves(null)
+            sinon.stub(models.Roomies, 'find').returns(Promise.resolve(null))
           })
 
           after(() => {
@@ -103,7 +103,7 @@ describe('Services', function () {
 
         describe('when there is a roomie', () => {
           before(() => {
-            sinon.stub(models.Roomies, 'find').resolves(mockedRoomie)
+            sinon.stub(models.Roomies, 'find').returns(Promise.resolve(mockedRoomie))
           })
 
           after(() => {
