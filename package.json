@@ -38,12 +38,12 @@
   "scripts": {
     "start": "node ./src/bin/www",
     "start:dev": "nodemon ./src/bin/www",
-    "lint": "standard && echo Code looks good!",
+    "lint": "node_modules/standard/bin/cmd.js && echo Code looks good!",
     "test": "npm run lint && npm run test:all",
     "test:unit": "export NODE_ENV=test && mocha --recursive test/unit",
     "test:integration": "export NODE_ENV=test && mocha --recursive test/integration",
     "test:all": "export NODE_ENV=test && mocha --recursive",
-    "test:watch": "export NODE_ENV=test && standard && mocha --recursive --watch"
+    "test:watch": "export NODE_ENV=test && npm run lint && mocha --recursive --watch"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -64,6 +64,7 @@
     "node-mocks-http": "^1.4.4",
     "sinon": "^1.17.2",
     "sinon-as-promised": "^4.0.0",
+    "standard": "^5.3.1",
     "supertest": "^1.1.0"
   }
 }
