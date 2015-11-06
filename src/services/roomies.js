@@ -1,17 +1,39 @@
 'use strict'
 
-var models = require('../models')
+const models = require('../models')
+const replyError = require('../utils/utils').replyError
+const replySuccess = require('../utils/utils').replySuccess
+const debug = require('debug')('api:server')
 
-exports.getAll = function getAll (req, res, next) {
-  models.Roomies
-    .findAll()
-    .then(function (roomies) {
-      res.status(200).send({
-        error: false,
-        content: {
-          message: roomies
-        }
-      })
+exports.createOne = (req, res) => {
+  let email = req.body.email
+  if (!email) {
+    return res.status(400).send(replyError(400, '`email` is missing'))
+  }
+
+  let firstName = req.body.firstName
+  if (!firstName) {
+    return res.status(400).send(replyError(400, '`firstName` is missing'))
+  }
+
+  let lastName = req.body.lastName
+  if (!lastName) {
+    return res.status(400).send(replyError(400, '`lastName` is missing'))
+  }
+
+  let roomie = models.Roomies.build({email, firstName, lastName})
+  let data = {
+    email: roomie.email,
+    firstName: roomie.firstName,
+    lastName: roomie.lastName
+  }
+
+  res.status(201).send(replySuccess(data))
+  roomie.save()
+    .then(() => {
+      debug(`roomie with email "${email}" has been saved`)
+    }).catch(() => {
+      debug(`roomie with email "${email}" could not be saved`)
     })
 }
 
@@ -44,71 +66,5 @@ exports.getOne = (req, res) => {
           message: roomie
         }
       })
-    })
-}
-
-exports.createOne = function createOne (req, res, next) {
-  if (!Object.getOwnPropertyNames(req.body).length) {
-    return res.status(400).send({
-      error: true,
-      content: {
-        message: '`request.body` cannot be empty'
-      }
-    })
-  }
-
-  if (!req.body.email) {
-    return res.status(400).send({
-      error: true,
-      content: {
-        message: '`request.body.email` is missing'
-      }
-    })
-  }
-
-  if (!req.body.firstName) {
-    return res.status(400).send({
-      error: true,
-      content: {
-        message: '`request.body.firstName` is missing'
-      }
-    })
-  }
-
-  if (!req.body.lastName) {
-    return res.status(400).send({
-      error: true,
-      content: {
-        message: '`request.body.lastName` is missing'
-      }
-    })
-  }
-
-  return models.Roomies
-    .create(req.body)
-    .then(function (roomie) {
-      res.status(201).send({
-        error: false,
-        content: {
-          message: roomie
-        }
-      })
-    })
-}
-
-exports.destroyAll = function destroyAll (req, res, next) {
-  models.Roomies
-    .findAll()
-    .then(function (roomies) {
-      Promise
-        .all(roomies.map((roomie) => roomie.destroy()))
-        .then(function (values) {
-          res.status(200).send({
-            error: false,
-            content: {
-              message: 'All resources have been destroyed'
-            }
-          })
-        })
     })
 }

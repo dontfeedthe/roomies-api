@@ -18,8 +18,6 @@ var RoomiesService = require('../services/roomies')
  */
 
 router.get('/:email', RoomiesService.getOne)
-router.get('/', RoomiesService.getAll)
 router.post('/', RoomiesService.createOne)
-router.delete('/', RoomiesService.destroyAll)
 
 module.exports = router

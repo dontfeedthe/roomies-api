@@ -1,13 +1,16 @@
-/* global before after */
+/* global describe it before after */
 
 'use strict'
 
-var expect = require('chai').expect
+var chai = require('chai')
 var sinon = require('sinon')
 var httpMocks = require('node-mocks-http')
 
 var models = require('../../../src/models')
 var roomiesService = require('../../../src/services/roomies')
+
+var expect = chai.expect
+chai.should()
 
 describe('RoomiesServices', function () {
   let mockedRoomie = {
@@ -19,17 +22,15 @@ describe('RoomiesServices', function () {
   it('should exist', function () {
     expect(roomiesService).to.not.be.undefined
   })
-  it('should contain a getAll function', function () {
-    expect(roomiesService).to.have.property('getAll')
-    expect(roomiesService.getAll).to.be.a('function')
+
+  it('should contain a getOne function', function () {
+    expect(roomiesService).to.have.property('getOne')
+    expect(roomiesService.getOne).to.be.a('function')
   })
+
   it('should contain a createOne function', function () {
     expect(roomiesService).to.have.property('createOne')
     expect(roomiesService.createOne).to.be.a('function')
-  })
-  it('should contain a destroyAll function', function () {
-    expect(roomiesService).to.have.property('destroyAll')
-    expect(roomiesService.destroyAll).to.be.a('function')
   })
 
   describe('get a single roomie', function () {
@@ -131,6 +132,104 @@ describe('RoomiesServices', function () {
               expect(data.content.message).to.have.property('lastName')
               expect(data.content.message).to.have.property('email')
             })
+        })
+      })
+    })
+  })
+
+  describe('create a single roomie', () => {
+    it('should exist a function for that', () => {
+      roomiesService.createOne.should.exist
+    })
+
+    describe('when email is missing', () => {
+      let req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/roomies'
+      })
+      let res = httpMocks.createResponse()
+
+      before(() => {
+        roomiesService.createOne(req, res)
+      })
+
+      it('should return a 400', () => {
+        res.statusCode.should.equals(400)
+      })
+    })
+
+    describe('when firstName is missing', () => {
+      let req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/roomies',
+        body: {
+          email: 'foobar'
+        }
+      })
+      let res = httpMocks.createResponse()
+
+      before(() => {
+        roomiesService.createOne(req, res)
+      })
+
+      it('should return a 400', () => {
+        res.statusCode.should.equals(400)
+      })
+    })
+
+    describe('when lastName is missing', () => {
+      let req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/roomies',
+        body: {
+          email: 'foobar',
+          firstName: 'foobar'
+        }
+      })
+      let res = httpMocks.createResponse()
+
+      before(() => {
+        roomiesService.createOne(req, res)
+      })
+
+      it('should return a 400', () => {
+        res.statusCode.should.equals(400)
+      })
+    })
+
+    describe('when all information are provided', () => {
+      let roomie
+      let roomieData = {
+        email: 'foobar',
+        firstName: 'foo',
+        lastName: 'bar',
+        save: () => Promise.resolve()
+      }
+      let res = httpMocks.createResponse()
+      let req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/roomies',
+        body: roomieData
+      })
+
+      before(() => {
+        sinon.stub(models.Roomies, 'build').returns(roomieData)
+        roomiesService.createOne(req, res)
+        roomie = res._getData()
+      })
+
+      it('should return 201', () => {
+        res.statusCode.should.equal(201)
+      })
+
+      it('should return a new roomie', () => {
+        roomie.should.deep.equals({
+          data: {
+            email: 'foobar',
+            firstName: 'foo',
+            lastName: 'bar'
+          },
+          errors: null
         })
       })
     })
