@@ -17,7 +17,8 @@
       "password": "test-foobar",
       "database": "test-roomies-api",
       "dialect": "sqlite",
-      "storage": "../db.sqlite"
+      "storage": "../db.sqlite",
+      "logging": false
     },
     "app": {
       "port": 1338
