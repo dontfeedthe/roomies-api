@@ -111,11 +111,11 @@ describe('utils', function () {
   describe('reply', () => {
     const reply = utils.reply
     it('should be available in utils', function () {
-      expect(utils).to.have.property('testContentType')
+      expect(utils).to.have.property('reply')
     })
 
     it('should be a function', function () {
-      expect(utils.testContentType).to.be.a('function')
+      expect(utils.reply).to.be.a('function')
     })
 
     describe('when content is missing', () => {
@@ -177,6 +177,70 @@ describe('utils', function () {
             detail: 'foobar foo baz'
           }],
           data: null
+        })
+      })
+    })
+  })
+
+  describe('replyError', () => {
+    const replyError = utils.replyError
+    it('should be available in utils', function () {
+      utils.should.have.property('replyError')
+    })
+
+    it('should be a function', function () {
+      replyError.should.be.a('function')
+    })
+
+    describe('when code is missing', () => {
+      it('should throw an error', () => {
+        replyError.bind(null).should.throw.ReferenceError
+      })
+    })
+
+    describe('when message is missing', () => {
+      it('should throw an error', () => {
+        replyError.bind(null, 400).should.throw.ReferenceError
+      })
+    })
+
+    describe('when both are provided', () => {
+      it('should return the correct data structure', () => {
+        replyError(400, 'foobar').should.deep.equals({
+          errors: [{status: 400, title: 'Bad Request', detail: 'foobar'}],
+          data: null
+        })
+      })
+    })
+  })
+
+  describe('replySuccess', () => {
+    const replySuccess = utils.replySuccess
+    it('should be available in utils', function () {
+      utils.should.have.property('replySuccess')
+    })
+
+    it('should be a function', function () {
+      replySuccess.should.be.a('function')
+    })
+
+    describe('when code is missing', () => {
+      it('should throw an error', () => {
+        replySuccess.bind(null).should.throw.ReferenceError
+      })
+    })
+
+    describe('when message is missing', () => {
+      it('should throw an error', () => {
+        replySuccess.bind(null, 400).should.throw.ReferenceError
+      })
+    })
+
+    describe('when both are provided', () => {
+      it('should return the correct data structure', () => {
+        replySuccess('foobar').should.deep.equals({
+          errors: null,
+          data: 'foobar'
         })
       })
     })

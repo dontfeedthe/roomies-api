@@ -1,6 +1,6 @@
 'use strict'
 
-exports.reply = (content) => {
+const reply = exports.reply = function (content) {
   if (!content) {
     throw new ReferenceError('`content` is missing')
   }
@@ -16,6 +16,31 @@ exports.reply = (content) => {
     }),
     data: errorHappened ? null : content.data
   }
+}
+
+exports.replyError = function replyError (code, message) {
+  if (!code) {
+    throw new ReferenceError('`code` is missing')
+  }
+
+  if (!message) {
+    throw new ReferenceError('`message` is missing')
+  }
+
+  return reply({
+    errors: [{code, message}]
+  })
+}
+
+exports.replySuccess = function replySuccess (data) {
+  if (!data) {
+    throw new ReferenceError('`data` is missing')
+  }
+
+  return reply({
+    errors: null,
+    data: data
+  })
 }
 
 /**
