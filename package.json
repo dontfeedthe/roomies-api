@@ -42,8 +42,8 @@
     "test": "npm run lint && npm run test:all",
     "test:unit": "export NODE_ENV=test && mocha --recursive test/unit",
     "test:integration": "export NODE_ENV=test && mocha --recursive test/integration",
-    "test:all": "export NODE_ENV=test && mocha --recursive",
-    "test:watch": "export NODE_ENV=test && npm run lint && mocha --recursive --watch"
+    "test:all": "export NODE_ENV=test && mocha --recursive -R dot",
+    "test:watch": "export NODE_ENV=test && npm run lint && mocha --recursive --watch -R dot"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
