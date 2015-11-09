@@ -37,4 +37,42 @@ describe('Roomies', () => {
       })
     })
   })
+
+  describe('GET /roomies/:email', () => {
+    let result
+    const data = {
+      email: 'getroomiesbyemail@roomies.com',
+      firstName: 'foo',
+      lastName: 'bar'
+    }
+
+    before((done) => {
+      request(app)
+        .post('/roomies')
+        .set('Content-Type', 'application/json')
+        .send(data)
+        .end(done)
+    })
+
+    describe('when the email refers to an existing roomie', () => {
+      before((done) => {
+        request(app)
+          .get('/roomies/' + data.email)
+          .set('Content-Type', 'application/json')
+          .expect((res) => result = res)
+          .end(done)
+      })
+
+      it('should return 200', () => {
+        result.status.should.equals(200)
+      })
+
+      it('should return the selected roomie', () => {
+        result.body.should.deep.equals({
+          errors: null,
+          data: data
+        })
+      })
+    })
+  })
 })
