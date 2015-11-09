@@ -40,6 +40,7 @@ describe('RoomiesServices', function () {
     })
 
     describe('when no email is provided', () => {
+      let error, data
       let response = httpMocks.createResponse()
       let request = httpMocks.createRequest({
         params: {
@@ -47,18 +48,22 @@ describe('RoomiesServices', function () {
         }
       })
 
-      it('should return a 400', () => {
+      before(() => {
         roomiesService.getOne(request, response)
-        expect(response.statusCode).to.equal(400)
+        data = response._getData()
+        error = data.errors[0]
+      })
+
+      it('should return a 400', () => {
+        response.statusCode.should.equal(400)
       })
 
       it('should return an error message', function () {
-        roomiesService.getOne(request, response)
-
-        let data = response._getData()
-        expect(data.error).to.be.true
-        expect(data.content).to.be.an('object')
-        expect(data.content.message).to.be.a('string')
+        data.errors.should.exist
+        data.errors.should.be.an('array')
+        error.should.exist
+        error.status.should.equal(400)
+        error.detail.should.equal('`email` is missing')
       })
     })
 
@@ -71,8 +76,16 @@ describe('RoomiesServices', function () {
       })
 
       describe('when there are no roomies', () => {
-        before(() => {
+        let result, statusCode
+        before((done) => {
           sinon.stub(models.Roomies, 'find').returns(Promise.resolve(null))
+          roomiesService
+            .getOne(request, response)
+            .then(() => {
+              result = response._getData()
+              statusCode = response.statusCode
+              done()
+            })
         })
 
         after(() => {
@@ -80,30 +93,26 @@ describe('RoomiesServices', function () {
         })
 
         it('should return 404', () => {
-          return roomiesService
-            .getOne(request, response)
-            .then(() => {
-              expect(response.statusCode).to.equals(404)
-            })
+          statusCode.should.equal(404)
         })
 
         it('should return a detailed error', () => {
-          return roomiesService
-            .getOne(request, response)
-            .then(() => {
-              let data = response._getData()
-              expect(data).to.be.an('object')
-              expect(data.error).to.be.true
-              expect(data.content).to.be.an('object')
-              expect(data.content).to.have.property('message')
-              expect(data.content.message).to.be.a('string')
-            })
+          result.errors.should.exist
+          result.errors[0].status.should.equal(404)
+          result.errors[0].detail.should.equal('No resource matching foo@bar.com')
         })
       })
 
       describe('when there is a roomie', () => {
+        let result, statusCode
         before(() => {
           sinon.stub(models.Roomies, 'find').returns(Promise.resolve(mockedRoomie))
+          roomiesService
+            .getOne(request, response)
+            .then(() => {
+              result = response._getData()
+              statusCode = response.statusCode
+            })
         })
 
         after(() => {
@@ -111,27 +120,19 @@ describe('RoomiesServices', function () {
         })
 
         it('should return a 200', () => {
-          return roomiesService
-            .getOne(request, response)
-            .then(() => {
-              expect(response.statusCode).to.equals(200)
-            })
+          statusCode.should.equal(200)
         })
 
         it('should return a detailed message', () => {
-          return roomiesService
-            .getOne(request, response)
-            .then(() => {
-              let data = response._getData()
-              expect(data).to.be.an('object')
-              expect(data.error).to.be.false
-              expect(data.content).to.be.an('object')
-              expect(data.content).to.have.property('message')
-              expect(data.content.message).to.be.an('object')
-              expect(data.content.message).to.have.property('firstName')
-              expect(data.content.message).to.have.property('lastName')
-              expect(data.content.message).to.have.property('email')
-            })
+          result.should.be.an('object')
+          expect(result.errors).to.not.exist
+          result.data.should.exist
+
+          let data = result.data
+          data.should.be.an('object')
+          data.should.have.property('firstName')
+          data.should.have.property('lastName')
+          data.should.have.property('email')
         })
       })
     })

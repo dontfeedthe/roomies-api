@@ -40,31 +40,22 @@ exports.createOne = (req, res) => {
 exports.getOne = (req, res) => {
   let email = req.params.email
   if (!email) {
-    return res.status(400).send({
-      error: true,
-      content: {
-        message: '`email` is missing'
-      }
-    })
+    return res.status(400).send(replyError(400, '`email` is missing'))
   }
 
   return models.Roomies
-    .find()
+    .find({where: {email}})
     .then((roomie) => {
       if (!roomie) {
-        return res.status(404).send({
-          error: true,
-          content: {
-            message: `No resource matching ${email}`
-          }
-        })
+        return res.status(404).send(replyError(404, `No resource matching ${email}`))
       }
 
-      return res.status(200).send({
-        error: false,
-        content: {
-          message: roomie
-        }
-      })
+      let data = {
+        email: roomie.email,
+        firstName: roomie.firstName,
+        lastName: roomie.lastName
+      }
+
+      return res.status(200).send(replySuccess(data))
     })
 }
