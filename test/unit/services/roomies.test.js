@@ -159,6 +159,32 @@ describe('RoomiesServices', function () {
       })
     })
 
+    describe('when email is not valid', () => {
+      let statusCode
+
+      let data = {
+        email: 'foo',
+        firstName: 'foo',
+        lastName: 'bar'
+      }
+
+      let res = httpMocks.createResponse()
+      let req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/roomies',
+        body: data
+      })
+
+      before(() => {
+        roomiesService.createOne(req, res)
+        statusCode = res.statusCode
+      })
+
+      it('should return 400', () => {
+        statusCode.should.equal(400)
+      })
+    })
+
     describe('when firstName is missing', () => {
       let req = httpMocks.createRequest({
         method: 'POST',
@@ -201,7 +227,7 @@ describe('RoomiesServices', function () {
     describe('when a facebookId is provided', () => {
       let roomie
       let roomieData = {
-        email: 'foobar',
+        email: 'foobar@baz.com',
         firstName: 'foo',
         lastName: 'bar',
         facebookId: 'facebookid',
@@ -228,7 +254,7 @@ describe('RoomiesServices', function () {
         roomie.should.deep.equals({
           errors: null,
           data: {
-            email: 'foobar',
+            email: 'foobar@baz.com',
             firstName: 'foo',
             lastName: 'bar',
             facebookId: 'facebookid'
@@ -240,7 +266,7 @@ describe('RoomiesServices', function () {
     describe('when all information are provided', () => {
       let roomie
       let roomieData = {
-        email: 'foobar',
+        email: 'foobar@baz.com',
         firstName: 'foo',
         lastName: 'bar',
         facebookId: 'facebookId',
@@ -270,7 +296,7 @@ describe('RoomiesServices', function () {
       it('should return a new roomie', () => {
         roomie.should.deep.equals({
           data: {
-            email: 'foobar',
+            email: 'foobar@baz.com',
             firstName: 'foo',
             lastName: 'bar',
             facebookId: 'facebookId'

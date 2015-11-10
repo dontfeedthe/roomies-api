@@ -4,11 +4,16 @@ const models = require('../models')
 const replyError = require('../utils/utils').replyError
 const replySuccess = require('../utils/utils').replySuccess
 const debug = require('debug')('api:server')
+const validator = require('validator')
 
 exports.createOne = (req, res) => {
   let email = req.body.email
   if (!email) {
     return res.status(400).send(replyError(400, '`email` is missing'))
+  }
+
+  if (!validator.isEmail(email)) {
+    return res.status(400).send(replyError(400, '`email` must be a valid email'))
   }
 
   let firstName = req.body.firstName
