@@ -21,15 +21,15 @@ exports.createOne = (req, res) => {
     return res.status(400).send(replyError(400, '`lastName` is missing'))
   }
 
-  let roomie = models.Roomies.build({email, firstName, lastName})
-  let data = {
-    email: roomie.email,
-    firstName: roomie.firstName,
-    lastName: roomie.lastName
+  let data = {email, firstName, lastName}
+
+  let facebookId = req.body.facebookId
+  if (facebookId) {
+    data.facebookId = facebookId
   }
 
   res.status(201).send(replySuccess(data))
-  roomie.save()
+  models.Roomies.build(data).save()
     .then(() => {
       debug(`roomie with email "${email}" has been saved`)
     }).catch(() => {

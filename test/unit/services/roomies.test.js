@@ -198,12 +198,13 @@ describe('RoomiesServices', function () {
       })
     })
 
-    describe('when all information are provided', () => {
+    describe('when a facebookId is provided', () => {
       let roomie
       let roomieData = {
         email: 'foobar',
         firstName: 'foo',
         lastName: 'bar',
+        facebookId: 'facebookid',
         save: () => Promise.resolve()
       }
       let res = httpMocks.createResponse()
@@ -219,6 +220,49 @@ describe('RoomiesServices', function () {
         roomie = res._getData()
       })
 
+      after(() => {
+        models.Roomies.build.restore()
+      })
+
+      it('should return the created roomie with a facebookId', () => {
+        roomie.should.deep.equals({
+          errors: null,
+          data: {
+            email: 'foobar',
+            firstName: 'foo',
+            lastName: 'bar',
+            facebookId: 'facebookid'
+          }
+        })
+      })
+    })
+
+    describe('when all information are provided', () => {
+      let roomie
+      let roomieData = {
+        email: 'foobar',
+        firstName: 'foo',
+        lastName: 'bar',
+        facebookId: 'facebookId',
+        save: () => Promise.resolve()
+      }
+      let res = httpMocks.createResponse()
+      let req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/roomies',
+        body: roomieData
+      })
+
+      before(() => {
+        sinon.stub(models.Roomies, 'build').returns(roomieData)
+        roomiesService.createOne(req, res)
+        roomie = res._getData()
+      })
+
+      after(() => {
+        models.Roomies.build.restore()
+      })
+
       it('should return 201', () => {
         res.statusCode.should.equal(201)
       })
@@ -228,7 +272,8 @@ describe('RoomiesServices', function () {
           data: {
             email: 'foobar',
             firstName: 'foo',
-            lastName: 'bar'
+            lastName: 'bar',
+            facebookId: 'facebookId'
           },
           errors: null
         })
