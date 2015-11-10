@@ -1,6 +1,6 @@
 {
   "name": "roomies-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Roomies API",
   "main": "app.js",
   "repository": {
