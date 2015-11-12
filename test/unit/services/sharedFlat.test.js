@@ -6,18 +6,18 @@ let sinon = require('sinon')
 let httpMocks = require('node-mocks-http')
 
 let models = require('../../../src/models')
-let sharedFlatService = require('../../../src/services/sharedFlat')
+let SharedflatsService = require('../../../src/services/sharedflats')
 
 require('chai').should()
 
-describe('SharedFlatService', () => {
+describe('SharedflatsService', () => {
   it('should exist a service for that', () => {
-    sharedFlatService.should.exist
+    SharedflatsService.should.exist
   })
 
   describe('Create a new shared flat', () => {
     it('should exist a function for that', () => {
-      sharedFlatService.createOne.should.exist
+      SharedflatsService.createOne.should.exist
     })
 
     describe('when address is missing', () => {
@@ -27,11 +27,11 @@ describe('SharedFlatService', () => {
       })
 
       it('should throw an error when address is not provided', () => {
-        sharedFlatService.createOne.bind(null, req, null).should.throw(Error)
+        SharedflatsService.createOne.bind(null, req, null).should.throw(Error)
       })
 
       it('should provide an error message when... an error is thrown', () => {
-        sharedFlatService.createOne.bind(null, req, null).should.throw('`address` is missing')
+        SharedflatsService.createOne.bind(null, req, null).should.throw('`address` is missing')
       })
     })
 
@@ -45,42 +45,45 @@ describe('SharedFlatService', () => {
       })
 
       it('should throw an error when name is not provided', () => {
-        sharedFlatService.createOne.bind(null, req, null).should.throw(Error)
+        SharedflatsService.createOne.bind(null, req, null).should.throw(Error)
       })
 
       it('should provide an error message when... an error is thrown', () => {
-        sharedFlatService.createOne.bind(null, req, null).should.throw('`name` is missing')
+        SharedflatsService.createOne.bind(null, req, null).should.throw('`name` is missing')
       })
     })
 
     describe('when everything is ok', () => {
+      let statusCode
       let data = {
         name: 'foobar',
         address: '31 main square, NY',
-        save: () => Promise.resolve()
+        save: () => Promise.resolve({id: 1})
       }
 
-      before(() => {
-        sinon.stub(models.SharedFlat, 'build').returns(data)
+      const req = httpMocks.createRequest({
+        url: '/roomies',
+        method: 'POST',
+        body: data
       })
+      const res = httpMocks.createResponse()
 
-      it('should create a new sharedflat', () => {
-        let req = httpMocks.createRequest({
-          url: '/roomies',
-          method: 'POST',
-          body: data
-        })
-        let res = httpMocks.createResponse()
-
-        return sharedFlatService
+      before((done) => {
+        sinon.stub(models.sharedflats, 'build').returns(data)
+        SharedflatsService
           .createOne(req, res)
           .then(() => {
-            res.statusCode.should.equals(201)
+            statusCode = res.statusCode
+            done()
           })
       })
 
       after(() => {
-        models.SharedFlat.build.restore()
+        models.sharedflats.build.restore()
+      })
+
+      it('should create a new sharedflats', () => {
+        statusCode.should.equals(201)
       })
     })
   })

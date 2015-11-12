@@ -2,15 +2,15 @@
 
 'use strict'
 
-var SharedFlat = require('../../../src/models/sharedFlat')
+var sharedflats = require('../../../src/models/sharedflats')
 var chai = require('chai')
 
 chai.should()
 
 describe('Models', function () {
-  describe('SharedFlat', function () {
+  describe('sharedflats', function () {
     it('should exist', function () {
-      SharedFlat.should.exist
+      sharedflats.should.exist
     })
   })
 })

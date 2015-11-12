@@ -2,12 +2,12 @@
 
 'use strict'
 
-let SharedFlatRouter = require('../../../src/routes/sharedFlat')
+let SharedFlatRouter = require('../../../src/routes/sharedflats')
 
 require('chai').should()
 
 describe('Router', () => {
-  describe('SharedFlat', () => {
+  describe('sharedflats', () => {
     it('should exist', () => {
       SharedFlatRouter.should.exist
     })
